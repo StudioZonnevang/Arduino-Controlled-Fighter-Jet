@@ -3,6 +3,7 @@
 public class CubeMovement : MonoBehaviour
 {
     public SampleUserPolling_ReadWrite reader;
+    public OverWorldManager overWorldManager;
 
     public float speed = 3f;
     public float rotationSpeed = 10f;
@@ -52,7 +53,7 @@ public class CubeMovement : MonoBehaviour
             UpdateRotation2(arduinoDir.x, arduinoDir.y, arduinoDir.z);
         }
     }
-    void UpdateRotation(float x, float y, float z)
+    public void UpdateRotation(float x, float y, float z)
     {
         float givenX, givenY, givenZ;
 
@@ -86,7 +87,7 @@ public class CubeMovement : MonoBehaviour
 
         player.rotation = Quaternion.Euler(targetRot);
     }
-    void UpdateRotation2(float x, float y, float z)
+    public void UpdateRotation2(float x, float y, float z)
     {
         float xIncrement, yIncrement, zIncrement;
         float xRestitution, yRestitution, zRestitution;
@@ -149,13 +150,25 @@ public class CubeMovement : MonoBehaviour
 
         player.rotation = Quaternion.Euler(dir);
     }
+    public void UpdateRotation3(Vector3 dir)
+    {
+        Vector3 remappedDir = new Vector3(
+            dir.y, -dir.x, dir.z);
+        player.rotation = Quaternion.LookRotation(remappedDir);
+
+        Vector3 pos = gameObject.transform.position;
+        pos.x += remappedDir.x * Time.deltaTime * speed;
+        pos.y += remappedDir.y * Time.deltaTime * speed;
+        pos.z = 0;
+        gameObject.transform.position = pos;
+    }
     float RefactorValue(float val, float clampMin = -1f, float clampMax = 1f)
     {
         float refactored = 1f / (-Mathf.Pow(val, 2) + 1.5f) - (2f / 3f);
         refactored = Mathf.Clamp(refactored, clampMin, clampMax);
         return refactored;
     }
-    void UpdateDirectionalAngle(string mssg)
+    public void UpdateDirectionalAngle(string mssg)
     {
         if (mssg != null)
         {
@@ -180,3 +193,4 @@ public class CubeMovement : MonoBehaviour
         }
     }
 }
+    

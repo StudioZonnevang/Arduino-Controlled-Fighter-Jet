@@ -23,10 +23,16 @@ void loop() {
     if (IMU.accelerationAvailable()){
       IMU.readAcceleration(x, y, z);
 
-      String sequence = String(x) + ";" + String(y) + ";" + String(z);
+      int header = 1;
+
+      String sequence = String(header) + ";" + String(x) + ";" + String(y) + ";" + String(z);
       Serial.println(sequence);
     }
     prevTime = currentTime;
   }
   currentTime = millis();
+}
+
+void SetHeader(){
+  
 }
