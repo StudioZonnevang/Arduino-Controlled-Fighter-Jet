@@ -3,19 +3,13 @@
 public class MapChunk : MonoBehaviour
 {
     float moveSpeed = 30f;
+    public int level;
 
     public GameObject[] buildingPrefabs;
     public GameObject[] collectables;
 
     GameObject[] population;
     public Cell[] cells;
-
-    private void Awake()
-    {
-        cells =
-            new Cell[(int)(0.5f * GameMetrics.chunkSizeX
-            + 0.5f * GameMetrics.chunkSizeZ)];
-    }
 
     private void Update()
     {
@@ -33,7 +27,7 @@ public class MapChunk : MonoBehaviour
         val.z -= Time.deltaTime * moveSpeed;
         transform.position = val;
     }
-    void spawnCollectables(int level)
+    public void LayInfrastructure()
     {
 
     }
@@ -41,20 +35,55 @@ public class MapChunk : MonoBehaviour
     {
         population = new GameObject[5 + level];
 
-        for (int i = 0; i < population.Length; i++)
+        int i = 0;
+        while (i < population.Length)
+        {
+            int index = GameMetrics.ReturnRandomValue(cells.Length);
+            Debug.Log(index + " " + level);
+
+            if (cells[index] != null)
+            {
+                if (!cells[index].IsOccupied)
+                {
+                    GameObject building =
+                    Instantiate(buildingPrefabs
+                    [GameMetrics.ReturnRandomValue(buildingPrefabs.Length)]);
+
+                    building.transform.position = cells[index].transform.position;
+                    building.transform.SetParent(cells[index].transform);
+                    cells[index].IsOccupied = true;
+                    population[i] = building;
+                }
+                i++;
+            }
+        }
+        /*
+        for (int i = 0; i < population.Length;)
         {
             int index = Random.Range(0, cells.Length);
 
             if (cells[index] != null)
             {
-                level %= 4;
-                GameObject building = Instantiate(buildingPrefabs[level]);
+                if (cells[index].IsOccupied)
+                {
+                    Debug.Log("is occupied");
+                }
+
+                GameObject building =
+                    Instantiate(buildingPrefabs
+                    [GameMetrics.ReturnRandomValue(buildingPrefabs.Length)]);
 
                 building.transform.position = cells[index].transform.position;
                 building.transform.SetParent(cells[index].transform);
+                cells[index].IsOccupied = true;
                 population[i] = building;
+                i++;
             }
-        }
+        }*/
+    }
+    public void SpawnCollectables(int level)
+    {
+
     }
     void Disintegrate()
     {

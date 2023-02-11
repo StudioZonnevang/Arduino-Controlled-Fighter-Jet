@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class SerialInterpreter : MonoBehaviour
 {
     public SerialController serialController;
-    public CubeMovement mevement;
+    public CubeMovement playerController;
 
     private void Awake()
     {
@@ -90,7 +90,7 @@ public class SerialInterpreter : MonoBehaviour
 
             //mevement.UpdateRotation(rot.x, rot.y, rot.z);
             //mevement.UpdateRotation2(rot.x, rot.y, rot.z);
-            mevement.UpdateRotation3(rot);
+            playerController.UpdateRotation3(rot);
             //Update Player Dir
 
             return;
