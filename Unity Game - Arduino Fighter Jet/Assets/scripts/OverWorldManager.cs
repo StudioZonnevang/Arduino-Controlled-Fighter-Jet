@@ -22,7 +22,7 @@ public class OverWorldManager : MonoBehaviour
         player.transform.position = new Vector3(
             GameMetrics.chunkSizeX * 0.5f,
             20f,
-            0f);
+            15f);
         player.overWorldManager = this;
     }
 

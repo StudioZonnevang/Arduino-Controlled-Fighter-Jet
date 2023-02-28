@@ -159,7 +159,7 @@ public class CubeMovement : MonoBehaviour
         Vector3 pos = gameObject.transform.position;
         pos.x += remappedDir.x * Time.deltaTime * speed;
         pos.y += remappedDir.y * Time.deltaTime * speed;
-        pos.z = 0;
+        pos.z = gameObject.transform.position.z;
         gameObject.transform.position = pos;
     }
     float RefactorValue(float val, float clampMin = -1f, float clampMax = 1f)

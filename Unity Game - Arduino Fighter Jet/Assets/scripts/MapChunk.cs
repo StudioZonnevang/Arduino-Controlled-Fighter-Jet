@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class MapChunk : MonoBehaviour
 {
@@ -31,13 +33,22 @@ public class MapChunk : MonoBehaviour
     {
 
     }
+    public IEnumerator Populate()
+    {
+        yield return new WaitForSeconds(2);
+    }
     public void Populate(int level)
     {
+        //need to be moved to Coroutine
         population = new GameObject[5 + level];
 
         int i = 0;
         while (i < population.Length)
         {
+            if (i >= GameMetrics.cellLength)
+            {
+                i = population.Length;
+            }
             int index = GameMetrics.ReturnRandomValue(cells.Length);
             Debug.Log(index + " " + level);
 
@@ -53,8 +64,8 @@ public class MapChunk : MonoBehaviour
                     building.transform.SetParent(cells[index].transform);
                     cells[index].IsOccupied = true;
                     population[i] = building;
+                    i++;
                 }
-                i++;
             }
         }
         /*
