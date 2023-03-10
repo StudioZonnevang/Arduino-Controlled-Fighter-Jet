@@ -35,6 +35,18 @@ public class OverWorldManager : MonoBehaviour
                 chunks[i] = InitializeChunk(i);
             }
         }
+
+        updateChunkPos();
+    }
+    
+    void updateChunkPos()
+    {
+        for (int i = 0; i < chunks.Length; i++)
+        {
+            Vector3 val = chunks[i].transform.position;
+            val.z -= Time.deltaTime * player.MapSpeedMultiplier() * GameMetrics.mapSpeed;
+            chunks[i].transform.position = val;
+        }
     }
 
     void InitializeChunks()
@@ -57,13 +69,12 @@ public class OverWorldManager : MonoBehaviour
             chunks[i] = chunk;
         }
     }
-
     MapChunk InitializeChunk(int val)
     {
         MapChunk chunk = Instantiate(chunkPrefab);
         chunk.transform.parent = worldSpace.transform;
         chunk.cells = new Cell[GameMetrics.cellLength];
-        Debug.Log(GameMetrics.cellLength);
+        //Debug.Log(GameMetrics.cellLength);
 
         chunk.transform.position = new Vector3(
             GameMetrics.chunkSizeX * 0.5f,
@@ -89,7 +100,7 @@ public class OverWorldManager : MonoBehaviour
                 pos.y = 0;
                 pos.z = z * GameMetrics.cellSizeZ + (0.5f * GameMetrics.cellSizeZ);
 
-                Debug.Log(i);
+                //Debug.Log(i);
                 Cell newCell =
                     Instantiate(cellPrefab).GetComponent<Cell>();
                 chunk.cells[i] = newCell;

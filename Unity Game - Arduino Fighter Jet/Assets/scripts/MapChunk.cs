@@ -50,7 +50,7 @@ public class MapChunk : MonoBehaviour
                 i = population.Length;
             }
             int index = GameMetrics.ReturnRandomValue(cells.Length);
-            Debug.Log(index + " " + level);
+            //Debug.Log(index + " " + level);
 
             if (cells[index] != null)
             {

@@ -12,6 +12,11 @@ public static class GameMetrics
     public static int cellSizeX = 10;
     public static int cellSizeZ = 10;
 
+    public static float xMaxTilt = 80f;
+    public static float yMaxRot = 80f;
+
+    public static float mapSpeed = 30f;
+
     public static float chunkSpawnPosZ = chunkCount * chunkSizeZ - (chunkSizeZ * 0.5f);
     public static int cellLength = (chunkSizeX / cellSizeX) * (chunkSizeZ / cellSizeZ);
 

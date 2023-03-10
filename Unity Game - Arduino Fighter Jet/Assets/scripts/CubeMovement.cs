@@ -10,41 +10,96 @@ public class CubeMovement : MonoBehaviour
     public float tiltSpeed = 10f;
     public float restitutionSpeed = 10f;
 
+    private float xClamp;
+    private float yClamp;
+
+    public bool keyboardActivated = true;
+
     float elapsedTime = 0f;
 
     public Transform player;
+    public GameObject playerG;
     private Camera cam;
 
     private Vector3 dir, arduinoDir;
 
     private void Awake()
     {
-
         cam = GetComponentInChildren<Camera>();
         cam.transform.LookAt(player.transform);
+
+        xClamp = GameMetrics.xMaxTilt;
+        yClamp = GameMetrics.yMaxRot;
     }
 
     private void FixedUpdate()
     {
-        UpdateRotation();
+        if (keyboardActivated)
+        {
+            UpdateRotationKeyBoard();
+        }
+        else
+        {
+            UpdateRotationArduino();
+        }
+
         UpdatePosition();
+        MapSpeedMultiplier();
     }
 
     void UpdatePosition()
     {
-        player.transform.position += player.transform.forward * speed;
+        Vector3 pos = player.transform.forward * speed;
+        pos.z = 0;
+        player.transform.position += pos;
 
         cam.transform.position = new Vector3(
             player.transform.position.x,
             player.transform.position.y + 3f,
-            player.transform.position.z -15f);
+            player.transform.position.z - 15f);
     }
     public Vector3 GetPos()
     {
         return player.position;
     }
+    public float MapSpeedMultiplier()
+    {
+        if (Mathf.Abs(dir.x) + Mathf.Abs(dir.y) == 0f)
+        {
+            return 0.005f;
+        }
+        float multiplier = 1 - (Mathf.Abs(dir.x) + Mathf.Abs(dir.y)) / (xClamp + yClamp);
+        Debug.Log(multiplier);
+        return multiplier;
+    }
 
-    void UpdateRotation()
+    void UpdateRotationKeyBoard()
+    {
+        //Vector3 dir = player.rotation;
+        if (Input.GetKey("w"))
+        {
+            dir.x -= tiltSpeed * Time.deltaTime;
+        }
+        if (Input.GetKey("s"))
+        {
+            dir.x += tiltSpeed * Time.deltaTime;
+        }
+        if (Input.GetKey("a"))
+        {
+            dir.y -= rotationSpeed * Time.deltaTime;
+        }
+        if (Input.GetKey("d"))
+        {
+            dir.y += rotationSpeed * Time.deltaTime;
+        }
+        dir.x = Mathf.Clamp(dir.x, -xClamp, xClamp);
+        dir.y = Mathf.Clamp(dir.y, -yClamp, yClamp);
+        Mathf.Abs(dir.x);
+        //Debug.Log(dir);
+        dir.z = player.rotation.z;
+        player.rotation = Quaternion.Euler(dir);
+    }
+    void UpdateRotationArduino()
     {
         UpdateDirectionalAngle(reader.GetMessage());
 
@@ -75,8 +130,8 @@ public class CubeMovement : MonoBehaviour
             givenY = -RefactorValue(y);
             givenZ = RefactorValue(y);
         }
-        givenX = -givenX * 80f;
-        givenY = givenY * 80f;
+        givenX = -givenX * xClamp;
+        givenY = givenY * yClamp;
         givenZ = givenZ * 45f;
 
         elapsedTime += Time.fixedDeltaTime;
