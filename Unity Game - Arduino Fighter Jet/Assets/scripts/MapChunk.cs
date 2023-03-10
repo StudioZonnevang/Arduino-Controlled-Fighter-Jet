@@ -15,7 +15,7 @@ public class MapChunk : MonoBehaviour
 
     private void Update()
     {
-        UpdatePosition();
+        //UpdatePosition();
 
         if (transform.position.z < (-GameMetrics.chunkSizeZ * 0.5))
         {
